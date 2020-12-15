@@ -66,3 +66,11 @@ c2.func(c1);
 - 操作符有两种写法
   - 成员函数写法
   - 全局函数写法
+
+### 良好的类的编程习惯
+
+- 构造函数会用initialization list
+- 该加const的成员函数要加const
+- 参数传递尽量pass by reference
+- 返回值尽量return by reference
+- 数据放在private区
