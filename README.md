@@ -1,9 +1,15 @@
-# Notes-CPlusPlus-HouJie
+# Notes-Object-Oriented-Programming-HouJie
 学习笔记《C++面向对象高级编程》- 侯捷
 
-### 头文件与类的声明
+### 2.头文件与类的声明
+
+- Class的分类
+  - 带指针的（string类）
+  - 不带指针的（complex类）
 
 - Header (頭文件) 中的防衛式聲明
+  - 避免重复include
+  - 使用者不需要注意include的顺序
 ```cpp
 #ifndef __COMPLEX__
 #define __COMPLEX__
@@ -11,7 +17,12 @@
 #endif
 ```
 
-### 构造函数
+- 头文件的布局
+  - 前置声明
+  - 类的声明
+  - 类的定义
+
+### 3.构造函数
 
 - 构造函数的写法：initialization list
 ```cpp
@@ -19,6 +30,8 @@ complex (double r = 0, double i = 0)
 : re (r), im (i)
 { }
 ```
+
+### 4.参数传递与返回值
 
 - 构造函数放在private区
   - 不允许被外界实例化对象
@@ -37,25 +50,30 @@ A& A::getInstance() {
   static A a;
   return a;
 }
+// 调用
 A::getInstance().setup();
 ```
 
-### 成员函数
-
-- 声明：不改变成员变量的成员函数一定要加const，否则使用时可能会报错。
+- const成员函数
+  - 好习惯：不改变成员变量的成员函数一定要加const，否则使用时可能会报错。
 ```cpp
-double real () const { return re; }
+const complex c1(1, 2);
+cout << c1.real();  // 若complex::real()没加const，const对象调用非const函数，会报错
+cout << c1.imag();
 ```
 
-- 返回值：返回局部变量不可以返回引用，其余情况都尽量返回引用。
+- 参数传递
+  - 好习惯：所有参数传递都传引用
+
+- 返回值传递
+  - 好习惯：返回局部变量不可以返回引用，其余情况都尽量返回引用。
 
 
-### 友元
-
-- 相同class 的各個objects 互為friends (友元)
+- 友元
+  - 友元函数可以自由取得类的private成员
+  - 相同class的不同成员互为友元
 ```cpp
 int complex::func(const complex& param) { return param.re + param.im; }
-
 complex c1(2,1);
 complex c2;
 c2.func(c1); 
