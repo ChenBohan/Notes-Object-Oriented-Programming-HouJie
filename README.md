@@ -3,6 +3,9 @@
 
 ### 2.头文件与类的声明
 
+- C vs C++
+  - 面向对象：C++把数据和处理数据的函数封装在一起作为class
+
 - Class的分类
   - 带指针的（string类）
   - 不带指针的（complex类）
@@ -24,34 +27,42 @@
 
 ### 3.构造函数
 
-- 构造函数的写法：initialization list
+- inline
+  - inline函数效率会比较高
+  - inline关键字只是对编译器的建议
+
+- 构造函数好的写法：initialization list
+  - 变量的生成有两个阶段
+    - 1.初始化，冒号后
+    - 2.赋值：大括号里
 ```cpp
 complex (double r = 0, double i = 0)
-: re (r), im (i)
-{ }
+  : re (r), im (i) { }
 ```
 
 ### 4.参数传递与返回值
 
-- 构造函数放在private区
-  - 不允许被外界实例化对象
-  - 设计模式Singleton单例模式
+- 设计模式Singleton单例模式
+  - 构造函数放在private区
+    - 不允许被外界实例化对象
 ```cpp
 class A {
-  public:
+public:
   static A& getInstance();
   setup() { ... }
 private:
   A();
   A(const A& rhs);
-...
+  ...
 };
-A& A::getInstance() {
-  static A a;
+
+A& A::getInstance()
+{
+  static A a; // 自己创建了一份自己，且只有一份
   return a;
 }
-// 调用
-A::getInstance().setup();
+
+A::getInstance().setup(); // 外界调用时要靠getInstance()取得唯一的一个实例
 ```
 
 - const成员函数
@@ -73,17 +84,37 @@ cout << c1.imag();
   - 友元函数可以自由取得类的private成员
   - 相同class的不同成员互为友元
 ```cpp
-int complex::func(const complex& param) { return param.re + param.im; }
-complex c1(2,1);
-complex c2;
+class comple
+{
+public:
+  int complex::func(const complex& param)
+  { return param.re + param.im; }
+  ...
+}
 c2.func(c1); 
 ```
 
-### 操作符重载
+### 5.操作符重载
 
 - 操作符有两种写法
-  - 成员函数写法
-  - 全局函数写法
+  - 成员函数写法（内含this pointer）
+    - 
+```cpp
+inline complex& complex::opereator += (const complex& r) {
+  return __doapl (this, r); // 内含this pointer
+inline complex& __doapl (complex* ths, const complex& r) {
+  ths->rm += r.rm;
+  ths->im += r.im;
+  return *ths;
+}
+c2 += c1;
+```
+  - 非成员函数写法（全局函数）写法（无this pointer）
+```cpp
+inline complex operator + (const complex& x, const complex& y) {
+  return complex (real(x) + real(y), imag(x) + imag(y));  // 返回local object，不能return by reference
+}
+```
 
 ### 良好的类的编程习惯
 
