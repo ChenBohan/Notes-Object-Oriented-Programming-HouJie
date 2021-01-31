@@ -219,3 +219,24 @@ delete[] p;
     - 调用static函数的方式
       - 1.通过对象调用 `a.set_rate(7,0);`
       - 2.通过class name调用 `Account::set_rate(5.0);`
+
+### 11.组合与继承
+
+- Composition复合
+  - 表示has-a，这个queue类里有一个`deque<T> c`
+  - 设计模式Adapter
+    - 已经有一个功能强大的class deque了，现在开放它的部分接口，改装成class queue
+  - 构造和析构
+    - 构造由内向外
+    - 析构由外向内
+  
+- Delegation委托
+  - 类(handle)里有一个指向另一个类(body) 的指针 `StringRep* rep`
+
+- Inheritance继承
+  - 表示is-a `class List_node` : public List_node_base
+  - 构造和析构
+    - 构造由内向外（先父类后子类）
+    - 析构由外向内（先子类后父类）
+      - 父类的析构函数必须是virtual，否则会出现undefined behavior
+  - 虚函数
