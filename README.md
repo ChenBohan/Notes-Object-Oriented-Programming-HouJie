@@ -187,5 +187,35 @@ inline String::String operator= (const String& str)
 ### 8.堆、栈与内存管理
 
 - 变量的生命期
-  - stack
-```qi 
+  - stack object (local object, auto object)：离开作用域会被自动清理
+  - static object：在程序结束时才结束
+  - global object：在程序结束时才结束
+  - heap object: 在被delete之后才结束
+
+- new先分配内存，再调用构造函数
+  - 1.分配内存：内部调用malloc(n)`void* mem  = operator new(sizeof(Complex));
+  - 2.转型 `pc = static_cast<Complex*>(mem);`
+  - 3.构造函数 `pc->Complex::Complex(1,2);`
+
+- delete先调用析构函数，再释放内存
+  - 1.析构函数 `String::~String(ps)`
+  - 2.释放内存：内部调用free(ps) `operator delete(ps)`
+  
+- array new一定要搭配array delete
+```cpp
+String* p = new String[3];
+...
+delete[] p;
+```
+
+### 10.补充：类模板，函数模板及其他
+
+- static
+  - static成员变量：与对象脱离，在内存中只有一份
+    - 使用场景：与对象无关的一般数据
+    - 要在类的外部赋值：`double Account::m_rate = 8.0;`
+  - non static成员函数：在内存中只有一份，靠this pointer来区分要处理哪个对象 `double real() const { return this->re; }`
+  - static成员函数：没有this pointer，只能处理static成员变量
+    - 调用static函数的方式
+      - 1.通过对象调用 `a.set_rate(7,0);`
+      - 2.通过class name调用 `Account::set_rate(5.0);`
