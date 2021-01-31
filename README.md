@@ -183,3 +183,9 @@ inline String::String operator= (const String& str)
   strcpy(m_data, str.m_data);
   return *this;
 ```
+
+### 8.堆、栈与内存管理
+
+- 变量的生命期
+  - stack
+```qi 
