@@ -240,3 +240,42 @@ delete[] p;
     - 析构由外向内（先子类后父类）
       - 父类的析构函数必须是virtual，否则会出现undefined behavior
   - 虚函数
+
+### 12.虚函数与多态
+
+- 虚函数（函数的继承是继承了调用权）
+  - non-virtual：不希望被子类override重新定义它
+  - virtual：希望被子类重新定义它
+  - pure virtual：子类一定要重新定义它 `virtual void draw() const = 0;`
+  
+- 设计模式观察者
+  - 委托+继承
+  
+```cpp
+class Subject
+{
+private:
+  int m_value;
+  vector<Observer*> m_views;
+public:
+  void attch(Observer* obs)
+  {
+    m_miews.push_back(obs);
+  }
+  void set_val(int value)
+  {
+    m_value = value;
+    notify();
+  }
+  void notify()
+  {
+    for (int i = 0; i < m_views.size(); i++)
+      m_views[i]->update(this, m_value);
+  }
+};
+class Observer
+{ 
+public:
+  virtual void update(Subject* sub, int value) = 0;
+};
+```
