@@ -96,9 +96,8 @@ c2.func(c1);
 
 ### 5.操作符重载
 
-- 操作符有两种写法
+- 操作符重载有两种写法（任何操作都有两种写法）
   - 成员函数写法（内含this pointer）
-    - 
 ```cpp
 inline complex& complex::opereator += (const complex& r) {
   return __doapl (this, r); // 内含this pointer
@@ -116,10 +115,71 @@ inline complex operator + (const complex& x, const complex& y) {
 }
 ```
 
-### 良好的类的编程习惯
+- 良好的class的编程习惯
+  - 构造函数会用initialization list
+  - 该加const的成员函数要加const
+  - 参数传递尽量pass by reference
+  - 返回值尽量return by reference
+  - 数据放在private区
 
-- 构造函数会用initialization list
-- 该加const的成员函数要加const
-- 参数传递尽量pass by reference
-- 返回值尽量return by reference
-- 数据放在private区
+### 7.三大函数：拷贝构造，拷贝赋值，析构函数
+
+- 编译器默认三大函数
+  - 在带指针的类中，使用默认三大函数会有问题
+  
+- String类
+```cpp
+class String
+{
+public:
+  String(const char* cstr = 0);
+  String(const String& str);
+  String& operator=(const String& str);
+  ~String();
+  inline char* get_c_str() const { return m_data; }
+private
+  char* m_data; // 动态分配内存
+```
+
+- 构造函数
+```cpp
+inline String::String(const char* cstr = 0)
+{
+  if (cstr) {
+    m_data = new char[strlen(cstr) + 1];
+    strcpy(m_data, cstr);
+  } else {
+    m_data = new char[1];
+    *m_data = '\0';
+}
+```
+
+- 析构函数
+```cpp
+inline ~String()
+{
+  delete[] m_data;  // 释放动态分配的内存，否则内存泄漏
+}
+```
+
+- 拷贝构造函数
+```cpp
+inline String::String(const String& str)
+{
+  m_data = new char[strlen(str.m_data) + 1];
+  strcpy(m_data, str.m_data);
+}
+```
+  
+- 拷贝赋值函数
+  - 与拷贝构造函数的区别：拷贝赋值时，这个对象已经存在，所以需要先清空再拷贝
+```cpp
+inline String::String operator= (const String& str)
+{
+  if (this == &str) // 检测自我赋值，否则自我复制会出错
+    return *this; 
+  delete[] m_data;
+  m_data = new char[ strlen(str.m_data) + 1];
+  strcpy(m_data, str.m_data);
+  return *this;
+```
